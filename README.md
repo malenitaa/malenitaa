@@ -7,4 +7,4 @@ I study Computer Science and an ongoing full stack developer course, learning It
 
 Looking forward to grow, regarding my knowledges and my interpersonal exchange 🤗
 
-You can reach me through my links if you wanna chat, ask something or song recommendations to play on my new uke are welcome ✨ 
+You can reach me through my links if you wanna chat, ask something... song recommendations to play on my new uke are welcome! ✨ 
