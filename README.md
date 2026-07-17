@@ -1,26 +1,10 @@
 <div align="center">
 
-# ¡Hola, soy Malena! 👋
-
-Estudiante de LGTI (UADE) construyendo apps simples que resuelven un problema puntual, sin vueltas.
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/malena-villa-abrille)
+# Malena
 
 </div>
 
 ---
-
-### 🛠️ Stack
-
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)
-![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
-![Supabase](https://img.shields.io/badge/Supabase-3FCF8E?style=for-the-badge&logo=supabase&logoColor=white)
-
----
-
-### 🚀 Proyectos
 
 <table>
   <tr>
@@ -80,14 +64,6 @@ Estudiante de LGTI (UADE) construyendo apps simples que resuelven un problema pu
       </td>
       </tr>
       </table>
-
-      ---
-
-      <div align="center">
-
-      ![GitHub Stats](https://github-readme-stats.vercel.app/api?username=malenitaa&show_icons=true&theme=default&hide_title=true&hide_border=true)
-
-      </div>
       
   </tr>
 </table>
