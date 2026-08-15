@@ -1,14 +1,33 @@
-<div align="center">
+# Hola, soy Malena 👋
 
-# Malena
+Hago sitios y apps chiquitas que resuelven problemas cotidianos, casi todos pensados para Argentina. Buena parte del código lo escribe la IA; lo mío es la idea, decidir cómo tiene que funcionar y no soltarlo hasta que quede bien.
 
-</div>
+Todo lo que hago es gratis, sin cuentas y sin tracking.
+
+### En la web
+
+- 🚌 [¿Hay Paro?](https://www.hayparo.net.ar) — estado en vivo de paros de colectivos, subte y trenes en Buenos Aires
+- 👕 [¿Cuelgo la Ropa?](https://www.cuelgolaropa.ar) — sí o no según el clima de tu ubicación, en una sola pantalla
+- 🎬 [Donde Ver](https://catalogio.vercel.app) — en qué plataforma de streaming está cada película o serie
+- 📅 [¿Es Feriado Hoy?](https://esferiadohoy.vercel.app) — si hoy es feriado, cuál es, y cuánto falta para el próximo
+- ⏰ [Alarma de Vencimientos](https://alarma-sable.vercel.app) — recordatorios por mail para no olvidarte de pagar ni renovar nada
+- 📜 [MiContrato](https://micontratoar.vercel.app) — analiza contratos a la luz de la ley argentina (LCT y Defensa del Consumidor)
+- 🧾 [Fisca](https://fisca.vercel.app) — facturación simple para monotributistas, integrada con ARCA
+- 🎓 [Mapa de Correlativas](https://malenitaa.github.io/mapauade/) — el plan de estudios de LGTI (UADE), interactivo
+
+### En el escritorio (macOS)
+
+- 🍅 [pomodoro](https://github.com/malenitaa/pomodoro) — temporizador Pomodoro con estética pixel art
+- 🌧️ [study-room-pixel](https://github.com/malenitaa/study-room-pixel) — compañía ambiental para estudiar: lluvia, fogata, café o biblioteca
+- 📊 [usage](https://github.com/malenitaa/usage) — cuánto te queda de Claude Code, en la barra de menú
+
+### Experimentos
+
+- 🖐️ [manos](https://github.com/malenitaa/manos) — un instrumento que se toca en el aire: cámara, manos y síntesis en el navegador
 
 ---
 
-| | |
-|---|---|
-| **🚌 [¿Hay Paro?](https://www.hayparo.net.ar)**<br>Estado en vivo de paros de colectivos, subte y trenes en Buenos Aires, detectado automáticamente con IA. | **👕 [¿Cuelgo la Ropa?](https://www.cuelgolaropa.ar)**<br>Respuesta simple de sí o no según el clima de hoy, para no arruinar la ropa colgada. |
-| **🎬 [Catálogo (donde-ver)](https://catalogio.vercel.app)**<br>Buscador de películas y series por plataforma de streaming, con filtros y catálogo por país. | **📅 [¿Es Feriado Hoy?](https://esferiadohoy.vercel.app)**<br>Si hoy es feriado en Argentina, cuál es, y cuánto falta para el próximo. |
-| **⏰ [Alarma de Vencimientos](https://alarma-sable.vercel.app)**<br>Recordatorios automáticos por mail para no olvidarte de pagar o renovar nada. | **📜 [MiContrato](https://micontratoar.vercel.app)**<br>Analiza contratos laborales y de consumo a la luz de la ley argentina (LCT y Defensa del Consumidor). |
-| **🧾 [Fisca](https://fisca.vercel.app)**<br>Facturación simple para monotributistas, integrada con ARCA (ex AFIP). | **🗺️ [Mapa de Correlativas (UADE)](https://malenitaa.github.io/mapauade/)**<br>Visualizador interactivo del plan de estudios y correlativas de LGTI. |
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/malenitaa/malenitaa/output/github-snake-dark.svg" />
+  <img alt="viborita de contribuciones" src="https://raw.githubusercontent.com/malenitaa/malenitaa/output/github-snake.svg" />
+</picture>
