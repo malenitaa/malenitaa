@@ -13,7 +13,7 @@ Todo lo que hago es gratis, sin cuentas y sin tracking.
 - ⏰ [Alarma de Vencimientos](https://alarma-sable.vercel.app) — recordatorios por mail para no olvidarte de pagar ni renovar nada
 - 📜 [MiContrato](https://micontratoar.vercel.app) — analiza contratos a la luz de la ley argentina (LCT y Defensa del Consumidor)
 - 🧾 [Fisca](https://fisca.vercel.app) — facturación simple para monotributistas, integrada con ARCA
-- 🎓 [Mapa de Correlativas](https://malenitaa.github.io/mapauade/) — el plan de estudios de LGTI (UADE), interactivo
+- 🎓 [Plan UADE](https://planuade.ar) — plan de estudios y correlativas de las carreras de FAIN (UADE), interactivo
 
 ### En el escritorio (macOS)
 
