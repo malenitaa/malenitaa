@@ -27,6 +27,6 @@ Todo lo que hago es gratis, sin cuentas y sin tracking.
 ---
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/malenitaa/malenitaa/output/pancakes-dark.svg" />
-  <img alt="panqueques de contribuciones" src="https://raw.githubusercontent.com/malenitaa/malenitaa/output/pancakes.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/malenitaa/malenitaa/output/space-dark.svg" />
+  <img alt="un año de contribuciones como sistema solar" src="https://raw.githubusercontent.com/malenitaa/malenitaa/output/space.svg" />
 </picture>
