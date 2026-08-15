@@ -10,7 +10,6 @@ Todo lo que hago es gratis, sin cuentas y sin tracking.
 - 👕 [¿Cuelgo la Ropa?](https://www.cuelgolaropa.ar) — sí o no según el clima de tu ubicación, en una sola pantalla
 - 🎬 [Donde Ver](https://catalogio.vercel.app) — en qué plataforma de streaming está cada película o serie
 - 📅 [¿Es Feriado Hoy?](https://esferiadohoy.vercel.app) — si hoy es feriado, cuál es, y cuánto falta para el próximo
-- ⏰ [Alarma de Vencimientos](https://alarma-sable.vercel.app) — recordatorios por mail para no olvidarte de pagar ni renovar nada
 - 📜 [MiContrato](https://micontratoar.vercel.app) — analiza contratos a la luz de la ley argentina (LCT y Defensa del Consumidor)
 - 🧾 [Fisca](https://fisca.vercel.app) — facturación simple para monotributistas, integrada con ARCA
 - 🎓 [Plan UADE](https://planuade.ar) — plan de estudios y correlativas de las carreras de FAIN (UADE), interactivo
@@ -28,6 +27,6 @@ Todo lo que hago es gratis, sin cuentas y sin tracking.
 ---
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/malenitaa/malenitaa/output/github-snake-dark.svg" />
-  <img alt="viborita de contribuciones" src="https://raw.githubusercontent.com/malenitaa/malenitaa/output/github-snake.svg" />
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/malenitaa/malenitaa/output/pancakes-dark.svg" />
+  <img alt="panqueques de contribuciones" src="https://raw.githubusercontent.com/malenitaa/malenitaa/output/pancakes.svg" />
 </picture>
