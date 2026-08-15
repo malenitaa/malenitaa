@@ -24,6 +24,11 @@ Todo lo que hago es gratis, sin cuentas y sin tracking.
 
 - 🖐️ [manos](https://github.com/malenitaa/manos) — un instrumento que se toca en el aire: cámara, manos y síntesis en el navegador
 
+### Para tu perfil de GitHub
+
+- 🥞 [panqueques](https://github.com/malenitaa/panqueques) — tus contribuciones del año apiladas como panqueques
+- 🛸 [planetitas](https://github.com/malenitaa/planetitas) — tus contribuciones como un sistema solar (es lo que ves acá abajo)
+
 ---
 
 <picture>
