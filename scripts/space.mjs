@@ -3,7 +3,7 @@
 // a UFO with an alien cruising through, and a starfield.
 //
 // Usage:
-//   GITHUB_TOKEN=... node scripts/space.mjs <login> <outdir>
+//   GITHUB_TOKEN=... node scripts/space.mjs <login> <outdir> [--lang en|es]
 //   node scripts/space.mjs <login> <outdir> --from-file contrib.json [--static]
 //
 // Writes <outdir>/space.svg and <outdir>/space-dark.svg
@@ -13,11 +13,30 @@ import { join } from "node:path";
 
 const [login, outdir, ...flags] = process.argv.slice(2);
 if (!login || !outdir) {
-  console.error("usage: space.mjs <login> <outdir> [--from-file f] [--static]");
+  console.error("usage: space.mjs <login> <outdir> [--from-file f] [--static] [--lang en|es]");
   process.exit(1);
 }
 const staticMode = flags.includes("--static");
 const fileFlag = flags.indexOf("--from-file");
+
+// caption + month labels; add your language here, it's four lines
+const LOCALES = {
+  en: {
+    months: ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
+    caption: (t) => `${t} contributions in the last year · one planet per month`,
+  },
+  es: {
+    months: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
+    caption: (t) => `${t} contribuciones en el último año · un planeta por mes`,
+  },
+};
+const langFlag = flags.indexOf("--lang");
+const lang = langFlag !== -1 ? flags[langFlag + 1] : "en";
+const locale = LOCALES[lang];
+if (!locale) {
+  console.error(`unknown --lang "${lang}" (available: ${Object.keys(LOCALES).join(", ")})`);
+  process.exit(1);
+}
 
 async function fetchCalendar() {
   if (fileFlag !== -1) {
@@ -37,8 +56,6 @@ async function fetchCalendar() {
   return res.json();
 }
 
-const MONTHS_ES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
-
 function aggregate(data) {
   const cal = data.data.user.contributionsCollection.contributionCalendar;
   const byMonth = new Map();
@@ -50,7 +67,7 @@ function aggregate(data) {
   const months = [...byMonth.entries()]
     .filter(([, total]) => total > 0)
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, total]) => ({ key, total, label: MONTHS_ES[Number(key.slice(5)) - 1] }));
+    .map(([key, total]) => ({ key, total, label: locale.months[Number(key.slice(5)) - 1] }));
   return { months, grandTotal: cal.totalContributions };
 }
 
@@ -165,7 +182,7 @@ function render({ months, grandTotal }, palette) {
 
   // caption
   parts.push(`
-  <text class="fade cap" style="animation-delay:1.8s" x="${W / 2}" y="${H - 16}" text-anchor="middle" fill="${p.muted}">${grandTotal} contribuciones en el último año · un planeta por mes</text>`);
+  <text class="fade cap" style="animation-delay:1.8s" x="${W / 2}" y="${H - 16}" text-anchor="middle" fill="${p.muted}">${esc(locale.caption(grandTotal))}</text>`);
 
   const css = staticMode
     ? `.cruise{transform:translate(420px,52px)}`
