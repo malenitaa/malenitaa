@@ -19,6 +19,7 @@ Todo lo que hago es gratis, sin cuentas y sin tracking.
 - 🍅 [pomodoro](https://github.com/malenitaa/pomodoro) — temporizador Pomodoro con estética pixel art
 - 🌧️ [study-room-pixel](https://github.com/malenitaa/study-room-pixel) — compañía ambiental para estudiar: lluvia, fogata, café o biblioteca
 - 📊 [usage](https://github.com/malenitaa/usage) — cuánto te queda de Claude Code, en la barra de menú
+- 🎚️ [soundbar](https://github.com/malenitaa/soundbar) — volumen por app para macOS, con extensión para bajarle a una pestaña sin tocar la llamada
 
 ### Experimentos
 
