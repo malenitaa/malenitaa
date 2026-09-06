@@ -1,0 +1,164 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 300" width="840" height="300">
+  <style>
+    text{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+    .lbl{font-size:12px}
+    .cap{font-size:13px}
+    
+    .pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+    .fade{animation:fadein .6s ease-out both}
+    .drift{animation:drift 4s ease-in-out infinite alternate}
+    .tw{animation:tw 2.8s ease-in-out infinite}
+    .cruise{animation:cruise 14s linear infinite}
+    .bob{animation:bob 1.6s ease-in-out infinite alternate}
+    @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+    @keyframes fadein{from{opacity:0}to{opacity:1}}
+    @keyframes drift{from{transform:translateY(-3px)}to{transform:translateY(3px)}}
+    @keyframes tw{0%,100%{opacity:.15}50%{opacity:.9}}
+    @keyframes cruise{from{transform:translate(-60px,52px)}to{transform:translate(900px,52px)}}
+    @keyframes bob{from{transform:translateY(-2.5px)}to{transform:translateY(2.5px)}}
+    @media (prefers-reduced-motion:reduce){
+      .pop,.fade,.drift,.tw,.bob{animation:none}
+      .cruise{animation:none;transform:translate(420px,52px)}
+    }
+  </style>
+<rect x="0" y="0" width="840" height="300" rx="12" fill="#0d1117"/>
+<circle class="tw" style="animation-delay:0.41s" cx="821.6" cy="8.9" r="1.44" fill="#dfe6f2"/>
+<circle cx="73.2" cy="19.4" r="1.00" fill="#dfe6f2" opacity="0.72"/>
+<circle cx="667.4" cy="221.3" r="1.19" fill="#dfe6f2" opacity="0.65"/>
+<circle cx="611.4" cy="11.6" r="0.86" fill="#dfe6f2" opacity="0.53"/>
+<circle class="tw" style="animation-delay:0.68s" cx="454.9" cy="131.0" r="1.54" fill="#dfe6f2"/>
+<circle cx="702.4" cy="166.7" r="1.30" fill="#dfe6f2" opacity="0.52"/>
+<circle cx="52.0" cy="238.9" r="0.98" fill="#dfe6f2" opacity="0.59"/>
+<circle cx="190.0" cy="210.4" r="1.11" fill="#dfe6f2" opacity="0.36"/>
+<circle class="tw" style="animation-delay:1.43s" cx="370.5" cy="115.3" r="0.80" fill="#dfe6f2"/>
+<circle cx="630.1" cy="29.3" r="0.90" fill="#dfe6f2" opacity="0.70"/>
+<circle cx="495.4" cy="113.1" r="1.59" fill="#dfe6f2" opacity="0.64"/>
+<circle cx="684.1" cy="213.3" r="1.61" fill="#dfe6f2" opacity="0.39"/>
+<circle class="tw" style="animation-delay:0.86s" cx="56.8" cy="255.2" r="1.69" fill="#dfe6f2"/>
+<circle cx="525.9" cy="71.1" r="1.49" fill="#dfe6f2" opacity="0.74"/>
+<circle cx="188.7" cy="127.7" r="1.80" fill="#dfe6f2" opacity="0.70"/>
+<circle cx="372.6" cy="198.9" r="1.79" fill="#dfe6f2" opacity="0.69"/>
+<circle class="tw" style="animation-delay:1.65s" cx="87.0" cy="157.6" r="0.95" fill="#dfe6f2"/>
+<circle cx="42.9" cy="204.6" r="1.57" fill="#dfe6f2" opacity="0.44"/>
+<circle cx="156.8" cy="229.8" r="1.21" fill="#dfe6f2" opacity="0.36"/>
+<circle cx="208.5" cy="112.7" r="0.84" fill="#dfe6f2" opacity="0.36"/>
+<circle class="tw" style="animation-delay:0.76s" cx="23.0" cy="59.6" r="1.47" fill="#dfe6f2"/>
+<circle cx="573.3" cy="140.1" r="1.66" fill="#dfe6f2" opacity="0.60"/>
+<circle cx="785.1" cy="154.9" r="1.30" fill="#dfe6f2" opacity="0.51"/>
+<circle cx="573.9" cy="135.2" r="1.77" fill="#dfe6f2" opacity="0.36"/>
+<circle class="tw" style="animation-delay:1.90s" cx="736.4" cy="245.1" r="0.72" fill="#dfe6f2"/>
+<circle cx="609.9" cy="78.8" r="1.65" fill="#dfe6f2" opacity="0.63"/>
+<circle cx="391.1" cy="199.3" r="1.77" fill="#dfe6f2" opacity="0.40"/>
+<circle cx="196.6" cy="52.2" r="1.39" fill="#dfe6f2" opacity="0.72"/>
+<circle class="tw" style="animation-delay:2.29s" cx="444.1" cy="188.7" r="1.16" fill="#dfe6f2"/>
+<circle cx="386.7" cy="259.1" r="1.15" fill="#dfe6f2" opacity="0.67"/>
+<circle cx="322.2" cy="136.8" r="1.40" fill="#dfe6f2" opacity="0.57"/>
+<circle cx="709.1" cy="50.0" r="1.54" fill="#dfe6f2" opacity="0.61"/>
+<circle class="tw" style="animation-delay:1.11s" cx="804.2" cy="128.7" r="1.07" fill="#dfe6f2"/>
+<circle cx="189.4" cy="44.0" r="1.63" fill="#dfe6f2" opacity="0.68"/>
+<circle cx="303.8" cy="200.0" r="0.71" fill="#dfe6f2" opacity="0.51"/>
+<circle cx="758.7" cy="25.1" r="1.14" fill="#dfe6f2" opacity="0.64"/>
+<circle class="tw" style="animation-delay:1.90s" cx="681.3" cy="113.3" r="1.25" fill="#dfe6f2"/>
+<circle cx="736.8" cy="210.1" r="1.07" fill="#dfe6f2" opacity="0.67"/>
+<circle cx="227.3" cy="17.8" r="0.80" fill="#dfe6f2" opacity="0.75"/>
+<circle cx="115.2" cy="129.7" r="1.62" fill="#dfe6f2" opacity="0.59"/>
+<circle class="tw" style="animation-delay:0.97s" cx="765.5" cy="226.0" r="1.62" fill="#dfe6f2"/>
+<circle cx="413.4" cy="76.1" r="1.72" fill="#dfe6f2" opacity="0.71"/>
+<circle cx="400.3" cy="63.0" r="0.73" fill="#dfe6f2" opacity="0.51"/>
+<circle cx="527.4" cy="20.5" r="0.89" fill="#dfe6f2" opacity="0.43"/>
+<circle class="tw" style="animation-delay:2.41s" cx="575.9" cy="120.7" r="0.94" fill="#dfe6f2"/>
+<circle cx="760.8" cy="243.3" r="0.74" fill="#dfe6f2" opacity="0.71"/>
+<circle cx="483.0" cy="201.0" r="1.13" fill="#dfe6f2" opacity="0.65"/>
+<circle cx="249.7" cy="163.4" r="1.17" fill="#dfe6f2" opacity="0.58"/>
+<circle class="tw" style="animation-delay:2.94s" cx="344.1" cy="156.7" r="1.68" fill="#dfe6f2"/>
+<circle cx="757.9" cy="133.1" r="1.72" fill="#dfe6f2" opacity="0.63"/>
+<circle cx="116.3" cy="24.8" r="1.48" fill="#dfe6f2" opacity="0.70"/>
+<circle cx="765.3" cy="220.2" r="0.82" fill="#dfe6f2" opacity="0.65"/>
+<circle class="tw" style="animation-delay:1.95s" cx="250.7" cy="76.3" r="1.49" fill="#dfe6f2"/>
+<circle cx="21.7" cy="70.9" r="1.41" fill="#dfe6f2" opacity="0.73"/>
+<circle cx="111.6" cy="80.1" r="0.97" fill="#dfe6f2" opacity="0.54"/>
+<circle cx="446.4" cy="170.9" r="1.33" fill="#dfe6f2" opacity="0.52"/>
+<circle class="tw" style="animation-delay:1.32s" cx="209.1" cy="192.8" r="1.27" fill="#dfe6f2"/>
+<circle cx="732.7" cy="244.7" r="1.05" fill="#dfe6f2" opacity="0.42"/>
+<circle cx="342.7" cy="167.7" r="1.31" fill="#dfe6f2" opacity="0.66"/>
+<circle cx="777.6" cy="194.1" r="1.49" fill="#dfe6f2" opacity="0.71"/>
+
+  <g transform="translate(110.0 102)">
+    <g class="pop" style="animation-delay:0.20s">
+      <g class="drift" style="animation-duration:3.5s">
+        <circle r="13.5" fill="#e58f6a"/>
+        <path d="M -2.701641962984731 -13.508209814923655 a 13.508209814923655 13.508209814923655 0 0 1 0 27.01641962984731 a 16.885262268654568 16.885262268654568 0 0 0 0 -27.01641962984731" fill="#c9714f" opacity="0.55" transform="translate(2.701641962984731 0)"/>
+      </g>
+    </g>
+    <text class="fade lbl" style="animation-delay:0.60s" y="36" text-anchor="middle" fill="#8b949e">abr · 11</text>
+  </g>
+
+  <g transform="translate(234.0 154)">
+    <g class="pop" style="animation-delay:0.45s">
+      <g class="drift" style="animation-duration:4.5s">
+        <circle r="12.6" fill="#7fb8a4"/>
+        <path d="M -2.513872528224321 -12.569362641121604 a 12.569362641121604 12.569362641121604 0 0 1 0 25.138725282243207 a 15.711703301402004 15.711703301402004 0 0 0 0 -25.138725282243207" fill="#5f9a86" opacity="0.55" transform="translate(2.513872528224321 0)"/>
+      </g>
+    </g>
+    <text class="fade lbl" style="animation-delay:0.85s" y="35" text-anchor="middle" fill="#8b949e">may · 6</text>
+  </g>
+
+  <g transform="translate(358.0 102)">
+    <g class="pop" style="animation-delay:0.70s">
+      <g class="drift" style="animation-duration:5.5s">
+        <circle r="11.0" fill="#a99ae0"/>
+        <path d="M -2.2 -11 a 11 11 0 0 1 0 22 a 13.75 13.75 0 0 0 0 -22" fill="#8a7ac4" opacity="0.55" transform="translate(2.2 0)"/>
+      </g>
+    </g>
+    <text class="fade lbl" style="animation-delay:1.10s" y="33" text-anchor="middle" fill="#8b949e">jun · 1</text>
+  </g>
+
+  <g transform="translate(482.0 154)">
+    <g class="pop" style="animation-delay:0.95s">
+      <g class="drift" style="animation-duration:3.5s">
+        <circle r="33.0" fill="#e0b354"/>
+        <path d="M -6.607489320715583 -33.03744660357791 a 33.03744660357791 33.03744660357791 0 0 1 0 66.07489320715582 a 41.29680825447239 41.29680825447239 0 0 0 0 -66.07489320715582" fill="#c39638" opacity="0.55" transform="translate(6.607489320715583 0)"/>
+        <circle cx="-11.6" cy="-8.3" r="5.9" fill="#c39638" opacity="0.7"/>
+        <circle cx="5.0" cy="13.2" r="4.0" fill="#c39638" opacity="0.7"/>
+      </g>
+    </g>
+    <text class="fade lbl" style="animation-delay:1.35s" y="55" text-anchor="middle" fill="#8b949e">jul · 456</text>
+  </g>
+
+  <g transform="translate(606.0 102)">
+    <g class="pop" style="animation-delay:1.20s">
+      <g class="drift" style="animation-duration:4.5s">
+        <circle r="40.0" fill="#88b5d8"/>
+        <path d="M -8 -40 a 40 40 0 0 1 0 80 a 50 50 0 0 0 0 -80" fill="#6a97bb" opacity="0.55" transform="translate(8 0)"/>
+        <ellipse cx="0" cy="0" rx="62.0" ry="15.2" fill="none" stroke="#d9c68f" stroke-width="5" transform="rotate(-14)" opacity="0.9"/>
+      </g>
+    </g>
+    <text class="fade lbl" style="animation-delay:1.60s" y="70" text-anchor="middle" fill="#8b949e">ago · 772</text>
+  </g>
+
+  <g transform="translate(730.0 154)">
+    <g class="pop" style="animation-delay:1.45s">
+      <g class="drift" style="animation-duration:5.5s">
+        <circle r="12.8" fill="#d789a8"/>
+        <path d="M -2.5563710108361923 -12.78185505418096 a 12.78185505418096 12.78185505418096 0 0 1 0 25.56371010836192 a 15.9773188177262 15.9773188177262 0 0 0 0 -25.56371010836192" fill="#b96b8b" opacity="0.55" transform="translate(2.5563710108361923 0)"/>
+      </g>
+    </g>
+    <text class="fade lbl" style="animation-delay:1.85s" y="35" text-anchor="middle" fill="#8b949e">sep · 7</text>
+  </g>
+
+  <g class="cruise">
+    <g class="bob">
+      <ellipse cx="0" cy="6" rx="30" ry="9" fill="#8b95a7"/>
+      <ellipse cx="0" cy="2" rx="30" ry="8" fill="#b7c1d1"/>
+      <path d="M -14 -2 a 14 12 0 0 1 28 0 z" fill="#a8d8ef" opacity="0.65"/>
+      <circle cx="0" cy="-6" r="6" fill="#8fd48a"/>
+      <circle cx="-2.2" cy="-7" r="1.4" fill="#1d3320"/>
+      <circle cx="2.2" cy="-7" r="1.4" fill="#1d3320"/>
+      <circle cx="-18" cy="7" r="2" fill="#ffd166"/>
+      <circle cx="0" cy="9" r="2" fill="#ef8368"/>
+      <circle cx="18" cy="7" r="2" fill="#ffd166"/>
+    </g>
+  </g>
+
+  <text class="fade cap" style="animation-delay:1.8s" x="420" y="284" text-anchor="middle" fill="#8b949e">1253 contribuciones en el último año · un planeta por mes</text>
+</svg>
