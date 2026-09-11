@@ -1,9 +1,3 @@
-# Hola, soy Malena 👋
-
-Hago sitios y apps chiquitas que resuelven problemas cotidianos, casi todos pensados para Argentina. Buena parte del código lo escribe la IA; lo mío es la idea, decidir cómo tiene que funcionar y no soltarlo hasta que quede bien.
-
-Todo lo que hago es gratis, sin cuentas y sin tracking.
-
 ### En la web
 
 - 🚌 [¿Hay Paro?](https://www.hayparo.net.ar) — estado en vivo de paros de colectivos, subte y trenes en Buenos Aires
