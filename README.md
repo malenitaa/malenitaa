@@ -8,7 +8,7 @@
 - 🧾 [Fisca](https://fisca.vercel.app) — facturación simple para monotributistas, integrada con ARCA
 - 🎓 [Plan UADE](https://planuade.ar) — plan de estudios y correlativas de las carreras de todas las facultades de UADE, interactivo
 
-### En el escritorio (macOS)
+### En el escritorio
 
 - 🍅 [pomodoro](https://github.com/malenitaa/pomodoro) — temporizador Pomodoro con estética pixel art
 - 🌧️ [study-room-pixel](https://github.com/malenitaa/study-room-pixel) — compañía ambiental para estudiar: lluvia, fogata, café o biblioteca
