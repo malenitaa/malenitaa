@@ -6,7 +6,7 @@
 - 📅 [¿Es Feriado Hoy?](https://esferiadohoy.vercel.app) — si hoy es feriado, cuál es, y cuánto falta para el próximo
 - 📜 [MiContrato](https://micontratoar.vercel.app) — analiza contratos a la luz de la ley argentina (LCT y Defensa del Consumidor)
 - 🧾 [Fisca](https://fisca.vercel.app) — facturación simple para monotributistas, integrada con ARCA
-- 🎓 [Plan UADE](https://planuade.ar) — plan de estudios y correlativas de las carreras de FAIN (UADE), interactivo
+- 🎓 [Plan UADE](https://planuade.ar) — plan de estudios y correlativas de las carreras de todas las facultades de UADE, interactivo
 
 ### En el escritorio (macOS)
 
