@@ -182,17 +182,14 @@ function render({ months, grandTotal }, palette) {
     );
   }
 
-  // rare background visitors, behind the planets: a shooting star and a satellite.
+  // rare visitors: a shooting star and a satellite.
   // An SVG on GitHub can't run JS, so "random" means several precomputed passes per
   // CSS cycle, each with its own path and gap, seeded by the total so they change
-  // whenever contributions do.
-  parts.push(`
-  <defs><linearGradient id="tail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="66" y2="-23"><stop offset="0" stop-color="${p.star}"/><stop offset="1" stop-color="${p.star}" stop-opacity="0"/></linearGradient></defs>
-  <g class="meteor">
-    <line x1="0" y1="0" x2="66" y2="-23" stroke="url(#tail)" stroke-width="1.8" stroke-linecap="round"/>
-    <circle r="1.7" fill="${p.star}"/>
-  </g>
-  <g class="sat">
+  // whenever contributions do. Paint order can't change mid-animation, so the
+  // satellite is drawn twice: once behind the planets and once in front, each
+  // copy flying only its own passes.
+  const satellite = (cls) => `
+  <g class="${cls}">
     <g transform="rotate(-20)">
       <rect x="-13" y="-3" width="8" height="6" fill="${p.dome}" opacity="0.85"/>
       <rect x="5" y="-3" width="8" height="6" fill="${p.dome}" opacity="0.85"/>
@@ -201,7 +198,13 @@ function render({ months, grandTotal }, palette) {
       <rect x="-3.5" y="-4" width="7" height="8" rx="1.2" fill="${p.ufoTop}"/>
       <circle class="tw" cx="0" cy="-6" r="1.2" fill="${p.light2}"/>
     </g>
-  </g>`);
+  </g>`;
+  parts.push(`
+  <defs><linearGradient id="tail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="66" y2="-23"><stop offset="0" stop-color="${p.star}"/><stop offset="1" stop-color="${p.star}" stop-opacity="0"/></linearGradient></defs>
+  <g class="meteor">
+    <line x1="0" y1="0" x2="66" y2="-23" stroke="url(#tail)" stroke-width="1.8" stroke-linecap="round"/>
+    <circle r="1.7" fill="${p.star}"/>
+  </g>${satellite("sat")}`);
 
   // planets: one per active month, chronological left → right
   const n = months.length;
@@ -292,6 +295,9 @@ function render({ months, grandTotal }, palette) {
   </g>`);
   });
 
+  // the satellite's front copy: over the planets, under the UFO
+  parts.push(satellite("satf"));
+
   // UFO with alien, cruising across on loop
   parts.push(`
   <g class="cruise">
@@ -371,9 +377,13 @@ function render({ months, grandTotal }, palette) {
     t += dur + between(35, 70);
   }
   const satTotal = t;
+  // one of the three crossings goes in front of the planets, the rest behind
+  const frontIdx = Math.floor(vr() * satPasses.length);
+  const satBehind = satPasses.filter((_, k) => k !== frontIdx);
+  const satFront = [satPasses[frontIdx]];
 
   const css = staticMode
-    ? `.cruise{transform:translate(420px,52px)}.meteor,.sat{display:none}`
+    ? `.cruise{transform:translate(420px,52px)}.meteor,.sat,.satf{display:none}`
     : `
     .pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
     .fade{animation:fadein .6s ease-out both}
@@ -391,12 +401,14 @@ function render({ months, grandTotal }, palette) {
     @keyframes bob{from{transform:translateY(-2.5px)}to{transform:translateY(2.5px)}}
     .meteor{animation:meteor ${meteorTotal.toFixed(1)}s linear infinite both}
     .sat{animation:sat ${satTotal.toFixed(1)}s linear infinite both}
+    .satf{animation:satf ${satTotal.toFixed(1)}s linear infinite both}
     ${flyby("meteor", meteorPasses, meteorTotal, 0.25)}
-    ${flyby("sat", satPasses, satTotal, 0.3)}
+    ${flyby("sat", satBehind, satTotal, 0.3)}
+    ${flyby("satf", satFront, satTotal, 0.3)}
     @media (prefers-reduced-motion:reduce){
       .pop,.fade,.drift,.tw,.bob,.lt{animation:none}
       .cruise{animation:none;transform:translate(420px,52px)}
-      .meteor,.sat{animation:none;display:none}
+      .meteor,.sat,.satf{animation:none;display:none}
     }`;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
