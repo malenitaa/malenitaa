@@ -4,7 +4,7 @@
 // star or satellite passing in the background.
 //
 // Usage:
-//   GITHUB_TOKEN=... node scripts/space.mjs <login> <outdir> [--lang en|es]
+//   GITHUB_TOKEN=... node scripts/space.mjs <login> <outdir> [--lang <code>]
 //   node scripts/space.mjs <login> <outdir> --from-file contrib.json [--static]
 //
 // Writes <outdir>/space.svg and <outdir>/space-dark.svg
@@ -14,29 +14,74 @@ import { join } from "node:path";
 
 const [login, outdir, ...flags] = process.argv.slice(2);
 if (!login || !outdir) {
-  console.error("usage: space.mjs <login> <outdir> [--from-file f] [--static] [--lang en|es]");
+  console.error("usage: space.mjs <login> <outdir> [--from-file f] [--static] [--lang <code>]");
   process.exit(1);
 }
 const staticMode = flags.includes("--static");
 const fileFlag = flags.indexOf("--from-file");
 
-// caption + month labels; add your language here, it's four lines
+// caption + month labels. Without --lang the SVG follows each visitor's browser
+// language (SVG <switch systemLanguage>) and falls back to English; --lang pins one.
+// Browsers only match systemLanguage tags exactly (es-AR doesn't match "es"),
+// so each language lists its regional variants. Add yours here.
 const LOCALES = {
   en: {
+    tags: [],
     months: ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
     caption: (t) => `${t} contributions in the last year · one planet per month`,
   },
   es: {
+    tags: ["es", "es-419", "es-AR", "es-BO", "es-CL", "es-CO", "es-CR", "es-CU", "es-DO", "es-EC", "es-ES", "es-GT", "es-HN", "es-MX", "es-NI", "es-PA", "es-PE", "es-PR", "es-PY", "es-SV", "es-US", "es-UY", "es-VE"],
     months: ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
     caption: (t) => `${t} contribuciones en el último año · un planeta por mes`,
   },
+  pt: {
+    tags: ["pt", "pt-BR", "pt-PT", "pt-AO", "pt-MZ"],
+    months: ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"],
+    caption: (t) => `${t} contribuições no último ano · um planeta por mês`,
+  },
+  fr: {
+    tags: ["fr", "fr-FR", "fr-CA", "fr-BE", "fr-CH", "fr-LU"],
+    months: ["janv", "févr", "mars", "avr", "mai", "juin", "juil", "août", "sept", "oct", "nov", "déc"],
+    caption: (t) => `${t} contributions sur la dernière année · une planète par mois`,
+  },
+  it: {
+    tags: ["it", "it-IT", "it-CH"],
+    months: ["gen", "feb", "mar", "apr", "mag", "giu", "lug", "ago", "set", "ott", "nov", "dic"],
+    caption: (t) => `${t} contributi nell'ultimo anno · un pianeta al mese`,
+  },
+  de: {
+    tags: ["de", "de-DE", "de-AT", "de-CH"],
+    months: ["jan", "feb", "mär", "apr", "mai", "jun", "jul", "aug", "sep", "okt", "nov", "dez"],
+    caption: (t) => `${t} Beiträge im letzten Jahr · ein Planet pro Monat`,
+  },
+  zh: {
+    tags: ["zh", "zh-CN", "zh-TW", "zh-HK", "zh-SG", "zh-Hans", "zh-Hant", "zh-Hans-CN", "zh-Hant-TW", "zh-Hant-HK"],
+    months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+    caption: (t) => `过去一年 ${t} 次贡献 · 每月一颗星球`,
+  },
+  ja: {
+    tags: ["ja", "ja-JP"],
+    months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+    caption: (t) => `過去1年間のコントリビューション ${t} 件 · 1か月に1つの惑星`,
+  },
 };
 const langFlag = flags.indexOf("--lang");
-const lang = langFlag !== -1 ? flags[langFlag + 1] : "en";
-const locale = LOCALES[lang];
-if (!locale) {
+const lang = langFlag !== -1 ? flags[langFlag + 1] : null; // null = follow the visitor
+if (lang !== null && !LOCALES[lang]) {
   console.error(`unknown --lang "${lang}" (available: ${Object.keys(LOCALES).join(", ")})`);
   process.exit(1);
+}
+
+// one <text>, or a <switch> with a <text> per language when following the visitor.
+// A <switch> picks the first child whose language is anywhere in the visitor's list,
+// so English (most people's second language) goes last, as the fallback.
+function say(attrs, fn) {
+  if (lang) return `<text ${attrs}>${esc(fn(LOCALES[lang]))}</text>`;
+  const others = Object.values(LOCALES).filter((L) => L.tags.length);
+  return `<switch>${others
+    .map((L) => `<text systemLanguage="${L.tags.join(", ")}" ${attrs}>${esc(fn(L))}</text>`)
+    .join("")}<text ${attrs}>${esc(fn(LOCALES.en))}</text></switch>`;
 }
 
 async function fetchCalendar() {
@@ -68,7 +113,7 @@ function aggregate(data) {
   const months = [...byMonth.entries()]
     .filter(([, total]) => total > 0)
     .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, total]) => ({ key, total, label: locale.months[Number(key.slice(5)) - 1] }));
+    .map(([key, total]) => ({ key, total }));
   return { months, grandTotal: cal.totalContributions };
 }
 
@@ -243,7 +288,7 @@ function render({ months, grandTotal }, palette) {
         ${details.join("\n        ")}
       </g>
     </g>
-    <text class="fade lbl" style="animation-delay:${(Number(delay) + 0.4).toFixed(2)}s" y="${(r + labelPad).toFixed(0)}" text-anchor="middle" fill="${p.muted}">${esc(m.label)} · ${m.total}</text>
+    ${say(`class="fade lbl" style="animation-delay:${(Number(delay) + 0.4).toFixed(2)}s" y="${(r + labelPad).toFixed(0)}" text-anchor="middle" fill="${p.muted}"`, (L) => `${L.months[Number(m.key.slice(5)) - 1]} · ${m.total}`)}
   </g>`);
   });
 
@@ -265,7 +310,7 @@ function render({ months, grandTotal }, palette) {
 
   // caption
   parts.push(`
-  <text class="fade cap" style="animation-delay:1.8s" x="${W / 2}" y="${H - 16}" text-anchor="middle" fill="${p.muted}">${esc(locale.caption(grandTotal))}</text>`);
+  ${say(`class="fade cap" style="animation-delay:1.8s" x="${W / 2}" y="${H - 16}" text-anchor="middle" fill="${p.muted}"`, (L) => L.caption(grandTotal))}`);
 
   // keyframes for one element doing several passes per cycle; between passes it's
   // invisible, so jumping to the next start point never shows.
