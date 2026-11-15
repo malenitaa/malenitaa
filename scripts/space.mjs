@@ -87,12 +87,12 @@ function esc(s) {
 }
 
 const PLANET_COLORS = [
-  { body: "#e58f6a", shade: "#c9714f" }, // coral
-  { body: "#7fb8a4", shade: "#5f9a86" }, // teal
-  { body: "#a99ae0", shade: "#8a7ac4" }, // lavender
-  { body: "#e0b354", shade: "#c39638" }, // gold
-  { body: "#88b5d8", shade: "#6a97bb" }, // ice blue
-  { body: "#d789a8", shade: "#b96b8b" }, // rose
+  { body: "#e58f6a", shade: "#c9714f", light: "#f4c4ab" }, // coral
+  { body: "#7fb8a4", shade: "#5f9a86", light: "#b8e0d0" }, // teal
+  { body: "#a99ae0", shade: "#8a7ac4", light: "#cfc6f0" }, // lavender
+  { body: "#e0b354", shade: "#c39638", light: "#f0d9a0" }, // gold
+  { body: "#88b5d8", shade: "#6a97bb", light: "#c0dcef" }, // ice blue
+  { body: "#d789a8", shade: "#b96b8b", light: "#ecc0d2" }, // rose
 ];
 
 function render({ months, grandTotal }, palette) {
@@ -132,6 +132,26 @@ function render({ months, grandTotal }, palette) {
 
   const biggest = months.reduce((a, b) => (b.total > a.total ? b : a));
 
+  // per-planet PRNG: same month + total => same look on every regeneration
+  const prOf = new Map(months.map((m, i) => [m, mulberry32(m.total * 131 + i * 7 + 1)]));
+
+  // the ring stays exclusive to the biggest month; the rest are dealt like a deck,
+  // so no style repeats until all of them are used. Bigger planets pick first and
+  // prefer the giant-only looks (they need room to read).
+  const GIANT = ["stripes", "storm", "spiral", "belt"];
+  const ANY = ["craters", "icecap", "moon", "halo"];
+  const used = new Map();
+  const styleOf = new Map([[biggest, "ring"]]);
+  for (const m of months.filter((x) => x !== biggest).sort((a, b) => b.total - a.total)) {
+    const pool = radiusOf(m) > 22 ? [...GIANT, ...ANY] : ANY;
+    const fewest = Math.min(...pool.map((s) => used.get(s) ?? 0));
+    let picks = pool.filter((s) => (used.get(s) ?? 0) === fewest);
+    if (picks.some((s) => GIANT.includes(s))) picks = picks.filter((s) => GIANT.includes(s));
+    const style = picks[Math.floor(prOf.get(m)() * picks.length)];
+    styleOf.set(m, style);
+    used.set(style, fewest + 1);
+  }
+
   months.forEach((m, i) => {
     const r = radiusOf(m);
     const cx = 110 + ((W - 220) * (n === 1 ? 0.5 : i / (n - 1)));
@@ -140,27 +160,70 @@ function render({ months, grandTotal }, palette) {
     const delay = (0.2 + i * 0.25).toFixed(2);
     const drift = (3.5 + (i % 3)).toFixed(1);
 
+    const pr = prOf.get(m);
+    const style = styleOf.get(m);
+    const under = [];  // drawn behind the planet body (orbits, halos, belt back)
     const details = [];
     // crescent shading
     details.push(`<path d="M ${-r * 0.2} ${-r} a ${r} ${r} 0 0 1 0 ${2 * r} a ${r * 1.25} ${r * 1.25} 0 0 0 0 ${-2 * r}" fill="${c.shade}" opacity="0.55" transform="translate(${r * 0.2} 0)"/>`);
-    if (m === biggest) {
-      // ring for the biggest month
+
+    if (style === "ring") {
       details.push(`<ellipse cx="0" cy="0" rx="${(r * 1.55).toFixed(1)}" ry="${(r * 0.38).toFixed(1)}" fill="none" stroke="${p.ring}" stroke-width="5" transform="rotate(-14)" opacity="0.9"/>`);
-    } else if (r > 16) {
-      // a couple of craters on mid-size planets
+    } else if (style === "craters") {
       details.push(`<circle cx="${(-r * 0.35).toFixed(1)}" cy="${(-r * 0.25).toFixed(1)}" r="${(r * 0.18).toFixed(1)}" fill="${c.shade}" opacity="0.7"/>`);
       details.push(`<circle cx="${(r * 0.15).toFixed(1)}" cy="${(r * 0.4).toFixed(1)}" r="${(r * 0.12).toFixed(1)}" fill="${c.shade}" opacity="0.7"/>`);
+    } else if (style === "stripes") {
+      // gas giant bands, clipped to the disc
+      details.push(`<clipPath id="clip${i}"><circle r="${r.toFixed(1)}"/></clipPath><g clip-path="url(#clip${i})"><g transform="rotate(-8)" fill="${c.shade}" opacity="0.5"><rect x="${-r.toFixed(1)}" y="${(-r * 0.48).toFixed(1)}" width="${(2 * r).toFixed(1)}" height="${(r * 0.24).toFixed(1)}" rx="${(r * 0.1).toFixed(1)}"/><rect x="${-r.toFixed(1)}" y="${(-r * 0.06).toFixed(1)}" width="${(2 * r).toFixed(1)}" height="${(r * 0.2).toFixed(1)}" rx="${(r * 0.09).toFixed(1)}"/><rect x="${-r.toFixed(1)}" y="${(r * 0.32).toFixed(1)}" width="${(2 * r).toFixed(1)}" height="${(r * 0.16).toFixed(1)}" rx="${(r * 0.08).toFixed(1)}"/></g></g>`);
+    } else if (style === "storm") {
+      // great-spot storm: soft rim + dark core
+      details.push(`<ellipse cx="${(-r * 0.26).toFixed(1)}" cy="${(r * 0.2).toFixed(1)}" rx="${(r * 0.4).toFixed(1)}" ry="${(r * 0.25).toFixed(1)}" fill="${c.shade}" opacity="0.45"/>`);
+      details.push(`<ellipse cx="${(-r * 0.26).toFixed(1)}" cy="${(r * 0.2).toFixed(1)}" rx="${(r * 0.27).toFixed(1)}" ry="${(r * 0.16).toFixed(1)}" fill="${c.shade}" opacity="0.95"/>`);
+    } else if (style === "spiral") {
+      // swirling vortex: an Archimedean spiral, slightly squashed to sit on the sphere
+      const pts = [];
+      for (let k = 0; k <= 72; k++) {
+        const t = k / 72;
+        const a = t * 2.5 * 2 * Math.PI;
+        pts.push(`${(r * 0.82 * t * Math.cos(a)).toFixed(1)},${(r * 0.66 * t * Math.sin(a)).toFixed(1)}`);
+      }
+      details.push(`<polyline points="${pts.join(" ")}" fill="none" stroke="${c.shade}" stroke-width="${(r * 0.11).toFixed(1)}" stroke-linecap="round" opacity="0.65" transform="rotate(-14)"/>`);
+    } else if (style === "icecap") {
+      details.push(`<clipPath id="clip${i}"><circle r="${r.toFixed(1)}"/></clipPath><g clip-path="url(#clip${i})"><ellipse cy="${(-r * 0.74).toFixed(1)}" rx="${(r * 0.66).toFixed(1)}" ry="${(r * 0.3).toFixed(1)}" fill="#eef4fb" opacity="0.9" transform="rotate(-10)"/></g>`);
+    } else if (style === "moon") {
+      // dashed orbit behind, little moon in front (reuses the UFO greys, so it follows the theme)
+      under.push(`<ellipse rx="${(r * 1.5).toFixed(1)}" ry="${(r * 0.46).toFixed(1)}" fill="none" stroke="${p.muted}" stroke-width="1.2" stroke-dasharray="3 5" opacity="0.35" transform="rotate(-18)"/>`);
+      details.push(`<g transform="rotate(-18) translate(${(r * 1.5).toFixed(1)} 0) rotate(18)"><circle r="${(r * 0.26).toFixed(1)}" fill="${p.ufoTop}"/><circle cx="${(-r * 0.08).toFixed(1)}" cy="${(-r * 0.06).toFixed(1)}" r="${(r * 0.07).toFixed(1)}" fill="${p.ufoBody}" opacity="0.8"/></g>`);
+      // a second, smaller moon on the far side of the same orbit
+      details.push(`<g transform="rotate(-18) translate(${(-r * 1.41).toFixed(1)} ${(-r * 0.16).toFixed(1)})"><circle r="${(r * 0.16).toFixed(1)}" fill="${p.ufoBody}"/></g>`);
+    } else if (style === "halo") {
+      under.push(`<circle r="${(r * 1.2).toFixed(1)}" fill="none" stroke="${c.light}" stroke-width="${(r * 0.13).toFixed(1)}" opacity="0.5"/>`);
+      under.push(`<circle r="${(r * 1.38).toFixed(1)}" fill="none" stroke="${c.light}" stroke-width="${(r * 0.1).toFixed(1)}" opacity="0.22"/>`);
+    } else if (style === "belt") {
+      // asteroid belt: same tilt as the ring, back dots behind the disc, front dots over it
+      const back = [];
+      const front = [];
+      for (let k = 0; k < 22; k++) {
+        const th = (k / 22) * 2 * Math.PI + pr() * 0.3;
+        const y = r * 0.42 * Math.sin(th);
+        const dot = `<circle cx="${(r * 1.62 * Math.cos(th)).toFixed(1)}" cy="${y.toFixed(1)}" r="${(r * (0.057 + pr() * 0.057)).toFixed(1)}" fill="${p.ring}" opacity="${(0.5 + pr() * 0.45).toFixed(2)}"/>`;
+        (y <= 0 ? back : front).push(dot);
+      }
+      under.push(`<g transform="rotate(-14)">${back.join("")}</g>`);
+      details.push(`<g transform="rotate(-14)">${front.join("")}</g>`);
     }
 
+    const labelPad = style === "ring" ? 30 : style === "belt" ? 26 : 22;
     parts.push(`
   <g transform="translate(${cx.toFixed(1)} ${cy})">
     <g class="pop" style="animation-delay:${delay}s">
       <g class="drift" style="animation-duration:${drift}s">
+        ${under.join("\n        ")}
         <circle r="${r.toFixed(1)}" fill="${c.body}"/>
         ${details.join("\n        ")}
       </g>
     </g>
-    <text class="fade lbl" style="animation-delay:${(Number(delay) + 0.4).toFixed(2)}s" y="${(r + (m === biggest ? 30 : 22)).toFixed(0)}" text-anchor="middle" fill="${p.muted}">${esc(m.label)} · ${m.total}</text>
+    <text class="fade lbl" style="animation-delay:${(Number(delay) + 0.4).toFixed(2)}s" y="${(r + labelPad).toFixed(0)}" text-anchor="middle" fill="${p.muted}">${esc(m.label)} · ${m.total}</text>
   </g>`);
   });
 
