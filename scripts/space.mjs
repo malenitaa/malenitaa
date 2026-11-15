@@ -1,6 +1,7 @@
 // Generates an animated SVG of the last year of GitHub contributions
 // as a little solar system: one planet per active month (size ∝ √contributions),
-// a UFO with an alien cruising through, and a starfield.
+// a UFO with an alien cruising through, a starfield, and the odd shooting
+// star or satellite passing in the background.
 //
 // Usage:
 //   GITHUB_TOKEN=... node scripts/space.mjs <login> <outdir> [--lang en|es]
@@ -117,6 +118,25 @@ function render({ months, grandTotal }, palette) {
         : `<circle cx="${x}" cy="${y}" r="${r}" fill="${p.star}" opacity="${(0.35 + rand() * 0.4).toFixed(2)}"/>`
     );
   }
+
+  // rare background visitors, behind the planets: a shooting star and a satellite.
+  // Cycle lengths (23s, 37s) don't divide the UFO's 14s, so they rarely line up.
+  parts.push(`
+  <defs><linearGradient id="tail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="66" y2="-23"><stop offset="0" stop-color="${p.star}"/><stop offset="1" stop-color="${p.star}" stop-opacity="0"/></linearGradient></defs>
+  <g class="meteor">
+    <line x1="0" y1="0" x2="66" y2="-23" stroke="url(#tail)" stroke-width="1.8" stroke-linecap="round"/>
+    <circle r="1.7" fill="${p.star}"/>
+  </g>
+  <g class="sat">
+    <g transform="rotate(-20)">
+      <rect x="-13" y="-3" width="8" height="6" fill="${p.dome}" opacity="0.85"/>
+      <rect x="5" y="-3" width="8" height="6" fill="${p.dome}" opacity="0.85"/>
+      <line x1="-9" y1="-3" x2="-9" y2="3" stroke="${p.bg}" stroke-width="0.8" opacity="0.6"/>
+      <line x1="9" y1="-3" x2="9" y2="3" stroke="${p.bg}" stroke-width="0.8" opacity="0.6"/>
+      <rect x="-3.5" y="-4" width="7" height="8" rx="1.2" fill="${p.ufoTop}"/>
+      <circle class="tw" cx="0" cy="-6" r="1.2" fill="${p.light2}"/>
+    </g>
+  </g>`);
 
   // planets: one per active month, chronological left → right
   const n = months.length;
@@ -248,7 +268,7 @@ function render({ months, grandTotal }, palette) {
   <text class="fade cap" style="animation-delay:1.8s" x="${W / 2}" y="${H - 16}" text-anchor="middle" fill="${p.muted}">${esc(locale.caption(grandTotal))}</text>`);
 
   const css = staticMode
-    ? `.cruise{transform:translate(420px,52px)}`
+    ? `.cruise{transform:translate(420px,52px)}.meteor,.sat{display:none}`
     : `
     .pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
     .fade{animation:fadein .6s ease-out both}
@@ -262,9 +282,14 @@ function render({ months, grandTotal }, palette) {
     @keyframes tw{0%,100%{opacity:.15}50%{opacity:.9}}
     @keyframes cruise{from{transform:translate(-60px,52px)}to{transform:translate(${W + 60}px,52px)}}
     @keyframes bob{from{transform:translateY(-2.5px)}to{transform:translateY(2.5px)}}
+    .meteor{animation:meteor 23s ease-in 4s infinite both}
+    .sat{animation:sat 37s linear 9s infinite both}
+    @keyframes meteor{0%{transform:translate(700px,20px);opacity:0}1%{opacity:1}5%{transform:translate(480px,95px);opacity:0}100%{transform:translate(480px,95px);opacity:0}}
+    @keyframes sat{0%{transform:translate(-30px,235px)}30%,100%{transform:translate(${W + 30}px,15px)}}
     @media (prefers-reduced-motion:reduce){
       .pop,.fade,.drift,.tw,.bob{animation:none}
       .cruise{animation:none;transform:translate(420px,52px)}
+      .meteor,.sat{animation:none;display:none}
     }`;
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">
