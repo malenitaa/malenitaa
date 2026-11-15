@@ -138,7 +138,9 @@ function render({ months, grandTotal }, palette) {
   }
 
   // rare background visitors, behind the planets: a shooting star and a satellite.
-  // Cycle lengths (23s, 37s) don't divide the UFO's 14s, so they rarely line up.
+  // An SVG on GitHub can't run JS, so "random" means several precomputed passes per
+  // CSS cycle, each with its own path and gap, seeded by the total so they change
+  // whenever contributions do.
   parts.push(`
   <defs><linearGradient id="tail" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="66" y2="-23"><stop offset="0" stop-color="${p.star}"/><stop offset="1" stop-color="${p.star}" stop-opacity="0"/></linearGradient></defs>
   <g class="meteor">
@@ -255,15 +257,75 @@ function render({ months, grandTotal }, palette) {
       <circle cx="0" cy="-6" r="6" fill="#8fd48a"/>
       <circle cx="-2.2" cy="-7" r="1.4" fill="#1d3320"/>
       <circle cx="2.2" cy="-7" r="1.4" fill="#1d3320"/>
-      <circle cx="-18" cy="7" r="2" fill="${p.light1}"/>
-      <circle cx="0" cy="9" r="2" fill="${p.light2}"/>
-      <circle cx="18" cy="7" r="2" fill="${p.light1}"/>
+      <circle class="lt" cx="-18" cy="7" r="2" fill="${p.light1}"/>
+      <circle class="lt" style="animation-delay:-0.8s" cx="0" cy="9" r="2" fill="${p.light2}"/>
+      <circle class="lt" style="animation-delay:-1.6s" cx="18" cy="7" r="2" fill="${p.light1}"/>
     </g>
   </g>`);
 
   // caption
   parts.push(`
   <text class="fade cap" style="animation-delay:1.8s" x="${W / 2}" y="${H - 16}" text-anchor="middle" fill="${p.muted}">${esc(locale.caption(grandTotal))}</text>`);
+
+  // keyframes for one element doing several passes per cycle; between passes it's
+  // invisible, so jumping to the next start point never shows.
+  // passes: [{ t0, t1, from: [x, y], to: [x, y], rot }] in seconds; fade in/out in seconds
+  function flyby(name, passes, total, fade) {
+    const pct = (t) => `${((t / total) * 100).toFixed(3)}%`;
+    const tf = ([x, y], rot) => `translate(${x.toFixed(0)}px,${y.toFixed(0)}px)${rot === undefined ? "" : ` rotate(${rot.toFixed(0)}deg)`}`;
+    const f = [`0%{transform:${tf(passes[0].from, passes[0].rot)};opacity:0}`];
+    for (const q of passes) {
+      f.push(`${pct(q.t0)}{transform:${tf(q.from, q.rot)};opacity:0}`);
+      f.push(`${pct(q.t0 + fade)}{opacity:1}`);
+      f.push(`${pct(q.t1 - fade)}{opacity:1}`);
+      f.push(`${pct(q.t1)}{transform:${tf(q.to, q.rot)};opacity:0}`);
+    }
+    const last = passes[passes.length - 1];
+    f.push(`100%{transform:${tf(last.to, last.rot)};opacity:0}`);
+    return `@keyframes ${name}{${f.join("")}}`;
+  }
+
+  const vr = mulberry32(grandTotal * 7919 + 3);
+  const between = (a, b) => a + vr() * (b - a);
+
+  // shooting star: 4 passes, the first one soon after load, then 30–60s apart.
+  // Direction alternates; rightward streaks start in the left half and leftward ones
+  // in the right half, each in its own quarter, so no two passes look alike.
+  // The tail points along (66,-23), i.e. the streak moves at 161°; rot turns it.
+  const zonesFor = { right: [0, 1].sort(() => vr() - 0.5), left: [2, 3].sort(() => vr() - 0.5) };
+  const rightFirst = vr() < 0.5;
+  const meteorPasses = [];
+  let t = 4;
+  for (let k = 0; k < 4; k++) {
+    const goRight = (k % 2 === 0) === rightFirst;
+    const deg = goRight ? between(15, 50) : between(130, 165); // down-right / down-left
+    const a = (deg * Math.PI) / 180;
+    const len = between(170, 260);
+    const zone = zonesFor[goRight ? "right" : "left"].pop();
+    const from = [120 + (zone + vr()) * ((W - 240) / 4), between(14, 100)];
+    const dur = between(0.9, 1.4);
+    meteorPasses.push({ t0: t, t1: t + dur, from, to: [from[0] + len * Math.cos(a), from[1] + len * Math.sin(a)], rot: deg - 161 });
+    t += dur + between(30, 60);
+  }
+  const meteorTotal = t;
+
+  // satellite: 3 diagonal crossings edge to edge, 35–70s apart. Side alternates
+  // every pass and climb/descent every two, so all three cross differently.
+  const ltrFirst = vr() < 0.5;
+  const climbFirst = vr() < 0.5;
+  const satPasses = [];
+  t = 12;
+  for (let k = 0; k < 3; k++) {
+    const ltr = (k % 2 === 0) === ltrFirst;
+    const climb = (k < 2) === climbFirst;
+    const low = between(150, 250);
+    const high = between(30, 110);
+    const [y0, y1] = climb ? [low, high] : [high, low];
+    const dur = between(10, 15);
+    satPasses.push({ t0: t, t1: t + dur, from: [ltr ? -30 : W + 30, y0], to: [ltr ? W + 30 : -30, y1] });
+    t += dur + between(35, 70);
+  }
+  const satTotal = t;
 
   const css = staticMode
     ? `.cruise{transform:translate(420px,52px)}.meteor,.sat{display:none}`
@@ -272,7 +334,9 @@ function render({ months, grandTotal }, palette) {
     .fade{animation:fadein .6s ease-out both}
     .drift{animation:drift 4s ease-in-out infinite alternate}
     .tw{animation:tw 2.8s ease-in-out infinite}
-    .cruise{animation:cruise 14s linear infinite}
+    .cruise{animation:cruise 20s linear infinite}
+    .lt{animation:lights 2.4s linear infinite}
+    @keyframes lights{0%,100%{fill:#ffd166}25%{fill:#ef8368}50%{fill:#8fd48a}75%{fill:#88b5d8}}
     .bob{animation:bob 1.6s ease-in-out infinite alternate}
     @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
     @keyframes fadein{from{opacity:0}to{opacity:1}}
@@ -280,12 +344,12 @@ function render({ months, grandTotal }, palette) {
     @keyframes tw{0%,100%{opacity:.15}50%{opacity:.9}}
     @keyframes cruise{from{transform:translate(-60px,52px)}to{transform:translate(${W + 60}px,52px)}}
     @keyframes bob{from{transform:translateY(-2.5px)}to{transform:translateY(2.5px)}}
-    .meteor{animation:meteor 23s ease-in 4s infinite both}
-    .sat{animation:sat 37s linear 9s infinite both}
-    @keyframes meteor{0%{transform:translate(700px,20px);opacity:0}1%{opacity:1}5%{transform:translate(480px,95px);opacity:0}100%{transform:translate(480px,95px);opacity:0}}
-    @keyframes sat{0%{transform:translate(-30px,235px)}30%,100%{transform:translate(${W + 30}px,15px)}}
+    .meteor{animation:meteor ${meteorTotal.toFixed(1)}s linear infinite both}
+    .sat{animation:sat ${satTotal.toFixed(1)}s linear infinite both}
+    ${flyby("meteor", meteorPasses, meteorTotal, 0.25)}
+    ${flyby("sat", satPasses, satTotal, 0.3)}
     @media (prefers-reduced-motion:reduce){
-      .pop,.fade,.drift,.tw,.bob{animation:none}
+      .pop,.fade,.drift,.tw,.bob,.lt{animation:none}
       .cruise{animation:none;transform:translate(420px,52px)}
       .meteor,.sat{animation:none;display:none}
     }`;
