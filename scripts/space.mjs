@@ -96,6 +96,24 @@ const PLANET_COLORS = [
   { body: "#d789a8", shade: "#b96b8b", light: "#ecc0d2" }, // rose
 ];
 
+// each calendar month has a fixed look, so a planet never changes style or color
+// as totals grow or months slide out of the window. [style, PLANET_COLORS index]
+// Neighbouring months never share a style; the three repeats sit far apart.
+const MONTH_LOOK = [
+  ["moon", 3],    // jan
+  ["belt", 4],    // feb
+  ["spiral", 5],  // mar
+  ["icecap", 0],  // apr
+  ["craters", 1], // may
+  ["moon", 2],    // jun
+  ["storm", 3],   // jul
+  ["ring", 4],    // aug
+  ["belt", 5],    // sep
+  ["spiral", 0],  // oct
+  ["stripes", 1], // nov
+  ["halo", 2],    // dec
+];
+
 function render({ months, grandTotal }, palette) {
   const W = 840;
   const H = 300;
@@ -150,38 +168,18 @@ function render({ months, grandTotal }, palette) {
       ? (R_MIN + R_MAX) / 2
       : R_MIN + ((Math.sqrt(m.total) - sMin) / (sMax - sMin)) * (R_MAX - R_MIN);
 
-  const biggest = months.reduce((a, b) => (b.total > a.total ? b : a));
-
-  // per-planet PRNG: same month + total => same look on every regeneration
-  const prOf = new Map(months.map((m, i) => [m, mulberry32(m.total * 131 + i * 7 + 1)]));
-
-  // the ring stays exclusive to the biggest month; the rest are dealt like a deck,
-  // so no style repeats until all of them are used. Bigger planets pick first and
-  // prefer the giant-only looks (they need room to read).
-  const GIANT = ["stripes", "storm", "spiral", "belt"];
-  const ANY = ["craters", "icecap", "moon", "halo"];
-  const used = new Map();
-  const styleOf = new Map([[biggest, "ring"]]);
-  for (const m of months.filter((x) => x !== biggest).sort((a, b) => b.total - a.total)) {
-    const pool = radiusOf(m) > 22 ? [...GIANT, ...ANY] : ANY;
-    const fewest = Math.min(...pool.map((s) => used.get(s) ?? 0));
-    let picks = pool.filter((s) => (used.get(s) ?? 0) === fewest);
-    if (picks.some((s) => GIANT.includes(s))) picks = picks.filter((s) => GIANT.includes(s));
-    const style = picks[Math.floor(prOf.get(m)() * picks.length)];
-    styleOf.set(m, style);
-    used.set(style, fewest + 1);
-  }
 
   months.forEach((m, i) => {
     const r = radiusOf(m);
     const cx = 110 + ((W - 220) * (n === 1 ? 0.5 : i / (n - 1)));
     const cy = 128 + (i % 2 === 0 ? -26 : 26); // stagger orbits
-    const c = PLANET_COLORS[i % PLANET_COLORS.length];
+    const [style, colorIdx] = MONTH_LOOK[Number(m.key.slice(5)) - 1];
+    const c = PLANET_COLORS[colorIdx];
     const delay = (0.2 + i * 0.25).toFixed(2);
     const drift = (3.5 + (i % 3)).toFixed(1);
 
-    const pr = prOf.get(m);
-    const style = styleOf.get(m);
+    // per-month PRNG (only for the belt's dot scatter): keyed by the month, not the total
+    const pr = mulberry32(Number(m.key.replace("-", "")));
     const under = [];  // drawn behind the planet body (orbits, halos, belt back)
     const details = [];
     // crescent shading
